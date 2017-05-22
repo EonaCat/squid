@@ -1,0 +1,40 @@
+Installation instructions for squid (from source) on Ubuntu 16.10 Xenial: 
+(Change configuration options to your needs)
+
+1. apt-get build-essential
+2. apt-get install libecap3-dev
+3. download the (latest) version of squid
+4. upack the file and cd into the directory
+5. configure squid using the command:
+
+./configure --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --libdir=/usr/lib --sharedstatedir=/usr/com --includedir=/usr/include --localstatedir=/var --libexecdir=/usr/lib/squid --srcdir=. --datadir=/usr/share/squid --sysconfdir=/etc/squid --infodir=/usr/share/info --mandir=/usr/share/man --x-includes=/usr/include --x-libraries=/usr/lib --with-default-user=proxy --with-logdir=/var/log/squid --with-pidfile=/var/run/squid.pid --enable-err-languages=English --enable-default-err-language=English --enable-storeio=ufs,aufs,diskd --enable-linux-netfilter --enable-removal-policies=lru,heap --enable-gnuregex --enable-follow-x-forwarded-for --enable-x-accelerator-vary --enable-zph-qos --enable-delay-pools --enable-snmp --enable-underscores --with-openssl --enable-ssl-crtd --enable-http-violations --enable-async-io=24 --enable-storeid-rewrite-helpers --with-large-files --with-libcap --with-netfilter-conntrack --with-included-ltdl --with-maxfd=65536 --with-filedescriptors=65536 --with-pthreads --without-gnutls --without-mit-krb5 --without-heimdal-krb5 --without-gnugss --enable-icap-client --disable-wccp --disable-wccpv2 --disable-dependency-tracking --disable-auth --disable-epoll --disable-ident-lookups --disable-icmp --enable-eca
+
+6. make && make install
+
+7. Go to /etc/squid and create a directory named 'ssl' and enter it
+
+###
+#Please note that the SSL certificate needs to be a valid FQDN or ipaddress
+###
+
+# Generate Private Key
+8. openssl genrsa -out NightBitsLAN.private 2048  
+
+# Create Certificate Signing Request
+9. openssl req -new -key NightBitsLAN.private -out NightBitsLAN.csr  
+
+# Sign Certificate
+10. openssl x509 -req -days 3652 -in NightBitsLAN.csr -signkey NightBitsLAN.private -out NightBitsLAN.cert  
+
+#initialize the SSL database
+11. /usr/lib/squid/ssl_crtd -c -s /var/lib/ssl_db
+
+12. Restart squid
+
+
+
+
+
+
+#to debug squid run the following command:
+squid -X
