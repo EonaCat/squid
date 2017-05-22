@@ -1,0 +1,2 @@
+# squid
+My squid configurations
